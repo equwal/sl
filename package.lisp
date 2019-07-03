@@ -1,2 +1,3 @@
 (defpackage #:sl
-  (:use #:cl))
+  (:use #:cl)
+  (:export :defsl))

@@ -1,0 +1,72 @@
+#+TITLE: SL: A Package Dependency Language
+#+AUTHOR: Spenser Truex
+#+EMAIL: web@spensertruex.com
+
+SL is a Domain Specific Language (ie. simple programming language) for dealing
+with ambiguous dependency situations. It is more expressive than the standard
+method in Common Lisp: the use of reader macros.
+* Examples
+  The only external macro is =defsl=. There is BNF below, though some examples are in order:
+** Simple example
+This defines =sl::operator-arglist= as =slynk:operator-arglist=, unless =slynk= is unavailable, in which case =swank:operator-arglist= is used.
+#+BEGIN_SRC lisp
+(defsl operator-arglist :fn :eq slynk swank)
+#+END_SRC
+The =:fn= shows that a FUNCTION is being defined, as opposed to a =:sym= symbol;
+To define another namespace a list is required: =(accessor-fn boundp-fn)=. =:eq=
+denotes that the packages have the same name for this function; to define different names for each package, they must be "qualified".
+
+For this simplest of examples, consider the reader macro alternative.
+#+BEGIN_SRC lisp
+#+(and slynk swank) (setf (symbol-function 'operator-arglist)
+                          slynk:operator-arglist)
+#+(and slynk (not swank)) (setf (symbol-function 'operator-arglist)
+                            slynk:operator-arglist)
+#+(and (not slynk) swank) (setf (symbol-function 'operator-arglist)
+                                swank:operator-arglist)
+#
+#+END_SRC
+** Complex example
+#+BEGIN_SRC lisp
+(defsl gensymmer (macro-function macro-function)
+    utils with-unique-names
+    alexandria with-gensyms)
+#+END_SRC
+To break this down:
+- =sl::gensymmer= is now defined as =utils:with-unique-names=.
+- =macro-function= was used twice: once as a =setfable= place, and once as a
+predicate.
+- If the =utils= package does not exist, then =sl::gensymmer= is defined as
+  =alexanrdia:with-gensyms=.
+* Install
+  Use ASDF to install. Usually this should work:
+#+BEGIN_SRC sh
+$ cd ~/common-lisp/
+$ git clone git@github.com:equwal/sl.git
+CL-USER> (asdf:load-system :sl)
+#+END_SRC
+
+* BNF
+#+BEGIN_EXAMPLE
+(defsl <sl-name> <fnsym> {<eq> | <packages>}
+<eq> ::= :eq <preflist>
+<fnsym> ::= :fn
+        | :sym
+        | <fnpair>
+
+<fnpair> ::= (<setfable place> <bound predicate>)
+<setfable place> ::= a setf function like symbol-function, symbol-name, etc.
+<bound predicate> ::= a function that returns NIL or otherwise like fboundp, boundp, etc.
+<packages> ::= <package> <fn name> <more packages>
+<package> ::= symbol
+<fn name> ::= symbol
+<preflist> ::= <package> <more packages>
+<more packages> ::= ε
+                | <package>
+                | <package> <more packages>
+#+END_EXAMPLE
+* Issues:
+- This is a new thing.
+- =defsl= is quite possibly the world's most unhygenic macro:
+don't expect anything about evaluation order or number of evaluations to be
+true.
