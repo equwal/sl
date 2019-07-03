@@ -45,6 +45,16 @@ predicate.
 -  to define different names for each package, they must be "qualified" with the
   package name.
 
+* Rationale and Purpose
+I made this since =asdf= was not enough abstraction for what I needed: to
+arbitrarily choose dependencies and renames for any symbol. I could write what I
+am doing twice, or I could write the compiler for =SL= (ie. the first two
+letters of SLy and SLime). Once I have that, I can bend that fork until I have a
+coherent set of names for all the functions I need, and which work on both (in
+principle). You could just intern the symbols (like with #+ reader syntax) but
+those tend to explode exponentially; since SL is 100% compile-time, it is
+similar (but more expressive).
+
 * Install
   Use ASDF to install. Usually this should work:
 #+BEGIN_SRC sh
