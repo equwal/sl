@@ -3,13 +3,17 @@
 #+EMAIL: web@spensertruex.com
 
 [[https://github.com/equwal/sl][Github]] | [[https://spensertruex.com/sl--dependency-language][Homepage]]
+
+
 SL is a Domain Specific Language (ie. simple programming language) for dealing
 with ambiguous dependency situations. It is more expressive than the standard
 method in Common Lisp: the use of reader macros.
 * Examples
   The only external macro is =defsl=. There is BNF below, though some examples are in order.
 ** Simple
-This defines =sl::operator-arglist= as =slynk:operator-arglist=, unless =slynk= is unavailable, in which case =swank:operator-arglist= is used.
+   This defines =operator-arglist= (in the current package) as
+   =slynk:operator-arglist=, unless =slynk= is unavailable, in which case
+   =swank:operator-arglist= is used.
 #+BEGIN_SRC lisp
 (defsl operator-arglist :fn :eq slynk swank)
 #+END_SRC
@@ -33,7 +37,7 @@ For this simplest of examples, consider the reader macro alternative.
     alexandria with-gensyms)
 #+END_SRC
 To break this down:
-- =sl::gensymmer= is now defined as =utils:with-unique-names=.
+- =gensymmer= is now defined as =utils:with-unique-names=.
 - =macro-function= was used twice: once as a =setfable= place, and once as a
 predicate.
 - If the =utils= package does not exist, then =sl::gensymmer= is defined as
