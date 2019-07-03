@@ -5,6 +5,8 @@
   :serial       t
   :license      "GNU GPL v3"
   :components ((:file "package")
+               (:file "utils")
+               (:file "macrolayer")
                (:file "sl"))
   :weakly-depends-on (:slynk :swank)
   :depends-on (:alexandria))
