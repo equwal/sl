@@ -7,7 +7,16 @@
 
 SL is a Domain Specific Language (ie. simple programming language) for dealing
 with ambiguous dependency situations. It is more expressive than the standard
-method in Common Lisp: the use of reader macros.
+method in Common Lisp: the use of reader macros. It provides symbol aliasing
+based on compile-time rules.
+
+* Benefits
+- Symbol aliasing at compile time provides a means of abstracting separate but
+similar interfaces. Forked projects, or projects that duplicate work.
+- Far more expressive and concise than reader macros, while still very simple.
+- There is also the use case of renaming things for import, like =with-gensyms= to =with-unique-names= or similar.
+* Drawbacks
+All the drawbacks of a new, experimental program apply.
 * Examples
   The only external macro is =defsl=. There is BNF below, though some examples are in order.
 ** Simple
@@ -28,7 +37,6 @@ For this simplest of examples, consider the reader macro alternative.
                             slynk:operator-arglist)
 #+(and (not slynk) swank) (setf (symbol-function 'operator-arglist)
                                 swank:operator-arglist)
-#
 #+END_SRC
 ** Complex example
 #+BEGIN_SRC lisp
