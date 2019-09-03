@@ -1,5 +1,4 @@
 (in-package :sl)
-
 (eval-when (:compile-toplevel :load-toplevel :execute)
   ;; From Graham's OnLisp
   (defun pack (obj)
@@ -24,13 +23,29 @@
                                 acc))
                      (nreverse
                       (cons source acc))))))
-      (if source (rec source nil) nil))))
-
-(defun select (fn lst)
-  "Return the first element that matches the function."
-  (if (null lst)
-      nil
-      (let ((val (funcall fn (car lst))))
-        (if val
-            (values (car lst) val)
-            (select fn (cdr lst))))))
+      (if source (rec source nil) nil)))
+  (defun select (fn lst)
+    "Return the first element that matches the function."
+    (if (null lst)
+        nil
+        (let ((val (funcall fn (car lst))))
+          (if val
+              (values (car lst) val)
+              (select fn (cdr lst))))))
+  (defun gen-case (base ex)
+    (if (symbolp ex)
+        (list 'eql base ex)
+        (append ex (list base))))
+  (defun select-preference (boundp qnames)
+    "Choose the function to use based on user preference."
+    (labels ((select-preference-aux (boundp qnames preflist)
+               (when preflist
+                 (let* ((res (select (lambda (x)
+                                       (string-equal (car x) (car preflist)))
+                               qnames))
+                        (package (car res))
+                        (symname (cadr res)))
+                   (if (and res (find-package package))
+                       (values symname package)
+                       (select-preference-aux boundp qnames (cdr preflist)))))))
+      (select-preference-aux boundp qnames (mapcar #'car qnames)))))
