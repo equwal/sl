@@ -71,7 +71,8 @@ CL-USER> (asdf:load-system :sl)
 #+END_SRC
 
 * BNF
-#+BEGIN_EXAMPLE
+[[https://spensertruex.com/sl--dependency-language][See with syntax highlighting on the webpage]].
+#+BEGIN_SRC bnf
 (defsl <sl-name> <fnsym>  <package spec>)
 <package spec> ::= <eq>
                | <packages>
@@ -88,7 +89,7 @@ CL-USER> (asdf:load-system :sl)
 <more packages> ::= ε
                 | <package>
                 | <package> <more packages>
-#+END_EXAMPLE
+#+END_SRC
 * Issues:
 - This is a new thing.
 - =defsl= is quite possibly the world's most unhygenic macro: don't expect
