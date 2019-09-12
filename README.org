@@ -11,8 +11,7 @@ method in Common Lisp: the use of reader macros. It provides symbol aliasing
 based on compile-time rules.
 
 * Benefits
-- Symbol aliasing at compile time provides a means of abstracting separate but
-similar interfaces. Forked projects, or projects that duplicate work.
+- Symbol aliasing at compile time provides a means of abstracting separate but similar interfaces. Forked projects, or projects that duplicate work.
 - Far more expressive and concise than reader macros, while still very simple.
 - There is also the use case of renaming things for import, like =with-gensyms= to =with-unique-names= or similar.
 * Drawbacks
